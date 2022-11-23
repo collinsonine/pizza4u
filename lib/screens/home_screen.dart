@@ -1,7 +1,11 @@
 import 'package:bootstrap_icons/bootstrap_icons.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_feather_icons/flutter_feather_icons.dart';
-import 'package:pizza4u/screens/product_screen.dart';
+import 'package:pizza4u/screens/add_product_screen.dart';
+import 'package:pizza4u/screens/all_products_screen.dart';
+import 'package:pizza4u/utils/all_resources.dart';
+import 'package:provider/provider.dart';
+
+import '../providers/product_provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -11,11 +15,15 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final myResources = MyResources();
+
   @override
   Widget build(BuildContext context) {
+    final productProvider = Provider.of<ProductProvider>(context);
     return Scaffold(
       body: SingleChildScrollView(
         child: Stack(
+          clipBehavior: Clip.hardEdge,
           children: [
             Container(
               margin: const EdgeInsets.only(top: 477),
@@ -64,45 +72,21 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       )),
                   Container(
-                    padding:
-                        const EdgeInsets.only(left: 30, right: 30, bottom: 20),
-                    child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            backgroundColor:
-                                const Color.fromARGB(255, 220, 188, 133),
-                            minimumSize: const Size(double.infinity, 50),
-                            shape: const RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(30)))),
-                        onPressed: () {},
-                        child: const Text(
-                          'Add New Product',
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontFamily: 'Sora',
-                              fontSize: 16),
-                        )),
-                  ),
+                      padding: const EdgeInsets.only(
+                          left: 30, right: 30, bottom: 20),
+                      child: myResources.buttons(
+                          context,
+                          myResources.secondaryGold(),
+                          "Add New Product",
+                          const AddProductScreen())),
                   Container(
-                    padding:
-                        const EdgeInsets.only(left: 30, right: 30, bottom: 50),
-                    child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            backgroundColor:
-                                const Color.fromARGB(255, 255, 162, 0),
-                            minimumSize: const Size(double.infinity, 50),
-                            shape: const RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(30)))),
-                        onPressed: () {},
-                        child: const Text(
-                          'View All Products',
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontFamily: 'Sora',
-                              fontSize: 16),
-                        )),
-                  )
+                      padding: const EdgeInsets.only(
+                          left: 30, right: 30, bottom: 50),
+                      child: myResources.buttons(
+                          context,
+                          myResources.primaryGold(),
+                          "View All Products",
+                          const AllProductScreen()))
                 ],
               ),
             ),
@@ -114,48 +98,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     image: DecorationImage(
                         image: AssetImage('assets/images/chef.png'),
                         fit: BoxFit.fitHeight)),
-                child: Container(
-                    padding: const EdgeInsets.only(right: 20),
-                    alignment: Alignment.topRight,
-                    child: Stack(alignment: Alignment.center, children: [
-                      Container(
-                        width: 50,
-                        height: 50,
-                        decoration: BoxDecoration(
-                            color: const Color.fromARGB(100, 220, 188, 133),
-                            border: Border.all(color: Colors.black26),
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(15))),
-                      ),
-                      IconButton(
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const ProductScreen()));
-                        },
-                        icon: const Icon(
-                          FeatherIcons.heart,
-                          size: 30,
-                          color: Colors.black54,
-                        ),
-                      ),
-                      Container(
-                        width: 18,
-                        height: 18,
-                        margin: const EdgeInsets.only(
-                            right: 25, bottom: 20, top: 5),
-                        decoration: const BoxDecoration(
-                            color: Colors.red,
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(50))),
-                        child: const Text(
-                          '4',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      )
-                    ]))),
+                child: myResources.iconButton(
+                    context,
+                    const Icon(BootstrapIcons.heart),
+                    productProvider.favouriteList.length.toString(),
+                    const AllProductScreen()))
           ],
         ),
       ),
